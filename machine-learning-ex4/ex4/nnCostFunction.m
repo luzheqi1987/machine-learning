@@ -68,18 +68,33 @@ a2 = [ones(m, 1) sigmoid(a1 * Theta1')];
 a3 = sigmoid(a2 * Theta2');
 
 
-for i=1:m
-	for c=1:num_labels
+for i = 1 : m
+	for c = 1 : num_labels
 	    yik = (y(i) == c);
 		J = J + (-1 .* yik) .* (log(a3(i, c))) - (1 .- yik) .* log(1 .- (a3(i, c)));
 	end;
 end;
 J = sum(J) / m;
 
+J1 = 0;
+for j = 1 : hidden_layer_size
+	for k= 2 : input_layer_size+1
+	    J1 = J1 + Theta1(j,k) * Theta1(j,k);
+	end;
+end;
 
+for j = 1 : num_labels
+	for k = 2 : hidden_layer_size+1
+	    J1 = J1 + Theta2(j,k) * Theta2(j,k);
+	end;
+end;
 
+J = J + lambda / (2 * m) * J1;
 
-
+delta3 = zeros(size(a3));
+for t = 1 : m
+	delta3(t) = a3(t) - ((1 : num_labels) == y(i));
+end;
 
 
 
